@@ -25,14 +25,6 @@ variable "projectname" {
   description = "Application Name"
 }
 
-output "endereco" {
+output "service_host" {
   value = module.mslanchonete.load_balancer_hostname
 }
-
-# output "nomeLB" {
-#   value = module.mslanchonete.load_balancer_name
-# }
-
-# output "LBinfo" {
-#   value = module.mslanchonete.load_balancer_info
-# }
