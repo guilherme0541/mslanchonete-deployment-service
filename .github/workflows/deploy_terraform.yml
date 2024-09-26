@@ -1,0 +1,60 @@
+name: Deploy terraform
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+  pull_request:
+    branches: [main]
+
+jobs:
+  plan:
+    name: Plan
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ vars.AWS_REGION }}
+        
+    - name: Terraform fmt
+      run: terraform fmt -recursive
+        
+    - name: Terraform init
+      run: terraform init
+
+    - name: Terraform plan
+      run: terraform plan -var='aws_region=${{ vars.AWS_REGION }}'
+
+  deploy:
+    name: Deploy
+    needs: plan
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ vars.AWS_REGION }}
+        
+    - name: Terraform fmt
+      run: terraform fmt -recursive
+        
+    - name: Terraform init
+      run: terraform init
+    
+    - name: Terraform Apply
+      run: terraform apply -var='aws_region=${{ vars.AWS_REGION }}' --auto-approve
