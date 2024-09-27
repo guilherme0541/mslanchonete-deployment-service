@@ -64,6 +64,6 @@ resource "kubernetes_ingress_v1" "ingress"{
 }
 
 output "load_balancer_hostname" {
-  depends_on = [data.kubernetes_service.service, kubernetes_ingress.ingress]
-  value      = kubernetes_ingress.ingress.status
+  depends_on = [data.kubernetes_service.service, kubernetes_ingress_v1.ingress]
+  value      = kubernetes_ingress_v1.ingress.status
 }
