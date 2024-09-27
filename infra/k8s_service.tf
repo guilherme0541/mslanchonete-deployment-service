@@ -23,7 +23,7 @@ data "kubernetes_service" "service" {
   }
 }
 
-resource "kubernetes_ingress" "ingress"{
+resource "kubernetes_ingress_v1" "ingress"{
   wait_for_load_balancer = true
   metadata {
     name = "${var.project_name}-ingress"
