@@ -35,7 +35,7 @@ resource "kubernetes_ingress" "ingress"{
     }
   }
 
-  spec{
+  spec {
     default_backend {
       service {
         name = "${var.project_name}-service"
